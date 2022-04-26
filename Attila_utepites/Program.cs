@@ -32,15 +32,52 @@ namespace Attila_utepites
 
             //2.feladat
             Console.Write($"Kérem adja meg az \"n\"-dik belépő járművet: ");
-            int n = Convert.ToInt32(Console.ReadLine());
-            Console.WriteLine("2.feladat");
-            if (lista[n-1].varos == "F")
+            int n = Convert.ToInt32(Console.ReadLine()) - 1;
+            Console.WriteLine("\n2.feladat");
+            if (lista[n].varos == "F")
             {
-                Console.WriteLine($"Alsó város felé haladt {lista[n-1].ido}");
+                Console.WriteLine($"Alsó város felé haladt {lista[n].ido}");
             }
             else
             {
-                Console.WriteLine($"Felső város felé haladt {lista[n-1].ido}");
+                Console.WriteLine($"Felső város felé haladt {lista[n].ido}");
+            }
+
+            //3.feladat
+            Console.WriteLine("\n3.feladat");
+            var valogat_A = lista.Where(x => x.varos == "A").OrderByDescending(x => x.ido);
+            Console.WriteLine($"A Felső város irányába tartó utolsó két jármű ideje másodpecben: {valogat_A.ElementAt(0).ido.TotalSeconds - valogat_A.ElementAt(1).ido.TotalSeconds}");
+
+            //4.feladat
+            Console.WriteLine("\n4.feladat: statisztika");
+            Console.WriteLine("Óra Alsó Felső");
+            int Also = 0, Felso = 0;
+            for (int i = lista.First().ido.Hours;i<=lista.Last().ido.Hours;i++)
+            {
+                for (int j = 0;j<lista.Count-1;j++)
+                {
+                    if (lista[j].ido.Hours == i)
+                    {
+                        if (lista[j].varos == "F")
+                        {
+                            Felso++;
+                        }
+
+                        if (lista[j].varos == "A")
+                        {
+                            Also++;
+                        }
+                    }
+                }
+                Console.WriteLine($"{i,2} {Also,3}db {Felso,3}db");
+                Also = 0;Felso = 0;
+            }
+
+            //5.feladat
+            Console.WriteLine("\n5.feladat");
+            foreach (var i in lista.OrderBy(x => x.masodperc).Take(10))
+            {
+                Console.WriteLine($"{i.ido} {i.masodperc} {i.varos}");
             }
             Console.ReadKey();
         }
