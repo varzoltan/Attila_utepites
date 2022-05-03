@@ -14,6 +14,7 @@ namespace Attila_utepites
             public TimeSpan ido { get; set; }
             public int masodperc { get; set; }
             public string varos { get; set; }
+            public TimeSpan Ido_add_mp{get{ return ido.Add(TimeSpan.FromSeconds(masodperc)); } }
             public Adat(string sor)//Konstruktor
             {
                 string[] db = sor.Split(' ');
@@ -77,8 +78,35 @@ namespace Attila_utepites
             Console.WriteLine("\n5.feladat");
             foreach (var i in lista.OrderBy(x => x.masodperc).Take(10))
             {
-                Console.WriteLine($"{i.ido} {i.masodperc} {i.varos}");
+                Console.WriteLine("{0} {1} {2} m/s",i.ido,i.varos,((double)1000/i.masodperc).ToString("0.0"));
             }
+
+            //6.feladat
+            //szürés
+            Console.WriteLine("\n6.feladat");
+            var levalogat = lista.Where(x => x.varos == "F");
+            StreamWriter ir = new StreamWriter("also.txt");
+            for (int i = 0;i<levalogat.Count()-1;i++)
+            {
+                for (int j = i+1;j<levalogat.Count();j++)
+                {
+                    if (levalogat.ElementAt(i).Ido_add_mp >= levalogat.ElementAt(j).Ido_add_mp)
+                    {
+                        ir.WriteLine(levalogat.ElementAt(i).Ido_add_mp);
+                    }
+                    else
+                    {
+                        if (i==0)
+                        {
+                            ir.WriteLine(levalogat.ElementAt(i).Ido_add_mp);
+                        }
+                        ir.WriteLine( levalogat.ElementAt(j).Ido_add_mp);
+                        i = j;
+                    }
+                }
+            }
+            ir.Close();
+            Console.WriteLine("\"also.txt\" állomány kiírás kész!");
             Console.ReadKey();
         }
     }
